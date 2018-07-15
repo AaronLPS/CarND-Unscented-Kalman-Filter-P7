@@ -64,8 +64,17 @@ public:
   ///* Augmented state dimension
   int n_aug_;
 
+  int n_sig_;
+
   ///* Sigma point spreading parameter
   double lambda_;
+
+  // noise covariance matrix
+  MatrixXd R_radar_;
+  MatrixXd R_laser_;
+
+  double NIS_radar_; //NIS Radar
+  double NIS_laser_; //NIS Laser
 
 
   /**
@@ -102,6 +111,31 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  /**
+   * @brief GenerateSigmaPoints
+   * @param Xsig_out
+   */
+  void GenerateSigmaPoints(MatrixXd& Xsig_out, Eigen::VectorXd x_aug, Eigen::MatrixXd P_aug);
+
+
+  /**
+   * @brief SigmaPointPrediction
+   * @param Xsig_out
+   * @param Xsig
+   * @param delta_t
+   */
+  void SigmaPointPrediction(MatrixXd& Xsig_pred, MatrixXd Xsig_aug, double delta_t);
+
+
+  /**
+   * @brief PredictMeanAndCovariance
+   * @param x_pred
+   * @param P_pred
+   */
+  void PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred, Eigen::MatrixXd Xsig_pred_, Eigen::VectorXd weights_);
+
+
 };
 
 #endif /* UKF_H */
